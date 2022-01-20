@@ -1,0 +1,49 @@
+﻿@page
+@model Orar.Pages.Profesori.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Profesor</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Profesor.ID" />
+            <div class="form-group">
+                <label asp-for="Profesor.Nume" class="control-label"></label>
+                <input asp-for="Profesor.Nume" class="form-control" />
+                <span asp-validation-for="Profesor.Nume" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Profesor.Prenume" class="control-label"></label>
+                <input asp-for="Profesor.Prenume" class="form-control" />
+                <span asp-validation-for="Profesor.Prenume" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Profesor.Norma" class="control-label"></label>
+                <input asp-for="Profesor.Norma" class="form-control" />
+                <span asp-validation-for="Profesor.Norma" class="text-danger"></span>
+            </div>
+            <label asp-for="Profesor.MaterieID" class="control-label">Nume Materie</label>
+            <select asp-for="Profesor.MaterieID" class="form-control" asp-items="ViewBag.MaterieID">
+            </select>
+            <span asp-validation-for="Profesor.MaterieID" class="text-danger"></span>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
