@@ -24,7 +24,9 @@ namespace Orar.Pages.OrarClse
         public async Task OnGetAsync()
         {
             OrarCls = await _context.OrarCls
-                .Include(o => o.Materie).ToListAsync();
+                  .Include(o => o.Materie)
+                .Include(o => o.Clasa)
+                .ToListAsync();
         }
     }
 }

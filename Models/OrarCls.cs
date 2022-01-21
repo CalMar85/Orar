@@ -15,7 +15,7 @@ namespace Orar.Models
         public string ZiOra { get; set; }
 
         public int ClasaID { get; set; }
-        public string Clasa { get; set; }
+        public Clasa Clasa { get; set; }
  
         public int MaterieID { get; set; }
         public Materie Materie { get; set; }
