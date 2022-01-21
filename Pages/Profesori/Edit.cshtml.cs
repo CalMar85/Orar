@@ -11,7 +11,7 @@ using Orar.Models;
 
 namespace Orar.Pages.Profesori
 {
-    public class EditModel : PageModel
+    public class EditModel : ClaseProfesorPageModel
     {
         private readonly Orar.Data.OrarContext _context;
 
@@ -30,49 +30,57 @@ namespace Orar.Pages.Profesori
                 return NotFound();
             }
 
-            Profesor = await _context.Profesor.FirstOrDefaultAsync(m => m.ID == id);
+
+
+            Profesor = await _context.Profesor
+                .Include(b => b.Materie)
+                .Include(b => b.ClaseProfesor).ThenInclude(b => b.Clasa)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
 
             if (Profesor == null)
             {
                 return NotFound();
             }
+            PopulateClasaAsignata(_context, Profesor);
+
             ViewData["MaterieID"] = new SelectList(_context.Set<Materie>(), "ID", "NumeMaterie");
             return Page();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id, string[]
+selectedClase)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return Page();
+                return NotFound();
             }
-
-            _context.Attach(Profesor).State = EntityState.Modified;
-
-            try
+            var profesorToUpdate = await _context.Profesor
+                .Include(i => i.Materie)
+                .Include(i => i.ClaseProfesor)
+                .ThenInclude(i => i.Clasa)
+                .FirstOrDefaultAsync(s => s.ID == id);
+            if (profesorToUpdate == null)
             {
+                return NotFound();
+            }
+            if (await TryUpdateModelAsync<Profesor>(profesorToUpdate, "Profesor",
+                 i => i.Nume, i => i.Prenume,
+                 i => i.Norma, i => i.Materie))
+            {
+                UpdateClaseProfesor(_context, selectedClase, profesorToUpdate);
                 await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProfesorExists(Profesor.ID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool ProfesorExists(int id)
-        {
-            return _context.Profesor.Any(e => e.ID == id);
+            //Apelam UpdateBookCategories pentru a aplica informatiile din checkboxuri la entitatea Books care
+            //este editata
+            UpdateClaseProfesor(_context, selectedClase, profesorToUpdate);
+            PopulateClasaAsignata(_context, profesorToUpdate);
+            return Page();
         }
     }
+
 }
+

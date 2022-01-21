@@ -19,5 +19,7 @@ namespace Orar.Data
         public DbSet<Orar.Models.Materie> Materie { get; set; }
 
         public DbSet<Orar.Models.Clasa> Clasa { get; set; }
+
+        public DbSet<Orar.Models.OrarCls> OrarCls { get; set; }
     }
 }

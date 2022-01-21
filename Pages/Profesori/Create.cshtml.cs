@@ -10,7 +10,7 @@ using Orar.Models;
 
 namespace Orar.Pages.Profesori
 {
-    public class CreateModel : PageModel
+    public class CreateModel : ClaseProfesorPageModel
     {
         private readonly Orar.Data.OrarContext _context;
 
@@ -23,25 +23,41 @@ namespace Orar.Pages.Profesori
         {
             ViewData["MaterieID"] = new SelectList(_context.Set<Materie>(), "ID", "NumeMaterie");
 
+            var profesor = new Profesor();
+            profesor.ClaseProfesor = new List<ClasaProfesor>();
+            PopulateClasaAsignata(_context, profesor);
             return Page();
         }
 
         [BindProperty]
         public Profesor Profesor { get; set; }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string[] selectedClase)
         {
-            if (!ModelState.IsValid)
+            var newProfesor = new Profesor();
+            if (selectedClase != null)
             {
-                return Page();
+                newProfesor.ClaseProfesor = new List<ClasaProfesor>();
+                foreach (var cls in selectedClase)
+                {
+                    var clsToAdd = new ClasaProfesor
+                    {
+                        ClasaID = int.Parse(cls)
+                    };
+                    newProfesor.ClaseProfesor.Add(clsToAdd);
+                }
             }
-
-            _context.Profesor.Add(Profesor);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            if (await TryUpdateModelAsync<Profesor>(
+            newProfesor, "Profesor",
+                i => i.Nume, i => i.Prenume,
+                i => i.Norma, i => i.MaterieID))
+            {
+                _context.Profesor.Add(newProfesor);
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
+            }
+            PopulateClasaAsignata(_context, newProfesor);
+            return Page();
         }
     }
 }

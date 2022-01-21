@@ -1,0 +1,42 @@
+﻿@page
+@model Orar.Pages.OrarClse.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>OrarCls</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="OrarCls.ZiOra" class="control-label"></label>
+                <input asp-for="OrarCls.ZiOra" class="form-control" />
+                <span asp-validation-for="OrarCls.ZiOra" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrarCls.ClasaID" class="control-label">Nume Clasa</label>
+                <select asp-for="OrarCls.ClasaID" class="form-control" asp-items="ViewBag.ClasaID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrarCls.MaterieID" class="control-label">Nume Materie</label>
+                <select asp-for="OrarCls.MaterieID" class="form-control" asp-items="ViewBag.MaterieID"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

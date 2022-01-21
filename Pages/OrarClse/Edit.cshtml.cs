@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Orar.Data;
 using Orar.Models;
 
-namespace Orar.Pages.Clase
+namespace Orar.Pages.OrarClse
 {
     public class EditModel : ClaseProfesorPageModel
     {
@@ -21,7 +21,7 @@ namespace Orar.Pages.Clase
         }
 
         [BindProperty]
-        public Clasa Clasa { get; set; }
+        public OrarCls OrarCls { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,13 +30,18 @@ namespace Orar.Pages.Clase
                 return NotFound();
             }
 
+            OrarCls = await _context.OrarCls
+                .Include(o => o.Materie)
 
-            Clasa = await _context.Clasa.FirstOrDefaultAsync(m => m.ID == id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
 
-            if (Clasa == null)
+            if (OrarCls == null)
             {
                 return NotFound();
             }
+            ViewData["MaterieID"] = new SelectList(_context.Set<Materie>(), "ID", "NumeMaterie");
+            ViewData["ClasaID"] = new SelectList(_context.Set<Clasa>(), "ID", "NumeClasa");
             return Page();
         }
 
@@ -49,7 +54,7 @@ namespace Orar.Pages.Clase
                 return Page();
             }
 
-            _context.Attach(Clasa).State = EntityState.Modified;
+            _context.Attach(OrarCls).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +62,7 @@ namespace Orar.Pages.Clase
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClasaExists(Clasa.ID))
+                if (!OrarClsExists(OrarCls.ID))
                 {
                     return NotFound();
                 }
@@ -70,9 +75,9 @@ namespace Orar.Pages.Clase
             return RedirectToPage("./Index");
         }
 
-        private bool ClasaExists(int id)
+        private bool OrarClsExists(int id)
         {
-            return _context.Clasa.Any(e => e.ID == id);
+            return _context.OrarCls.Any(e => e.ID == id);
         }
     }
 }

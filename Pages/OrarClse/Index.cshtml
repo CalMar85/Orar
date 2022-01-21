@@ -1,0 +1,48 @@
+﻿@page
+@model Orar.Pages.OrarClse.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Orarul claselor</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrarCls[0].ZiOra)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrarCls[0].Clasa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrarCls[0].Materie)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.OrarCls) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ZiOra)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Clasa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Materie)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
